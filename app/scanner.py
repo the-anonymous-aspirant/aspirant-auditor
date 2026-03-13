@@ -70,9 +70,14 @@ def scan_all(
 
     all_results = {}
     for repo in repos:
+        service_type = detect_service_type(repo)
+        if service_type == "unknown":
+            continue  # Skip non-service repos (no marker files)
+
         results = scan_repo(
             repo,
             rules,
+            service_type=service_type,
             category_filter=category_filter,
             all_repos=repos,
             deploy_path=deploy_path,
