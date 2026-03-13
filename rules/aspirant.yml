@@ -159,6 +159,21 @@ documentation:
     - "How to Debug"
     - "Gotchas"
 
+ci_workflow:
+  workflow_file: ".github/workflows/ci.yml"
+  required_steps:
+    - "actions/checkout"
+    - "docker/login-action"
+    - "docker/build-push-action"
+  recommended_steps:
+    - "docker/setup-buildx-action"
+    - "docker/metadata-action"
+  image_prefix: "ghcr.io/the-anonymous-aspirant/aspirant-"
+  push_trigger_branch: "main"
+  cache:
+    from: "type=gha"
+    to: "type=gha,mode=max"
+
 testing:
   forbidden_patterns:
     - pattern: "sqlite"
