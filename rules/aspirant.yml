@@ -1,0 +1,168 @@
+version: "1.0"
+source: "aspirant-meta CONVENTIONS.md (2026-03-13)"
+
+required_files:
+  python:
+    app:
+      - __init__.py
+      - main.py
+      - config.py
+      - database.py
+      - models.py
+      - schemas.py
+      - routes.py
+    tests:
+      - __init__.py
+      - conftest.py
+      - test_health.py
+    docs:
+      - SPEC.md
+      - ARCHITECTURE.md
+      - CHANGELOG.md
+      - DECISIONS.md
+      - OPERATIONS.md
+    root:
+      - README.md
+      - .gitignore
+      - requirements.txt
+  go:
+    root:
+      - README.md
+      - .gitignore
+      - go.mod
+      - main.go
+    docs:
+      - SPEC.md
+      - ARCHITECTURE.md
+      - CHANGELOG.md
+      - DECISIONS.md
+      - OPERATIONS.md
+  vue:
+    root:
+      - README.md
+      - .gitignore
+      - package.json
+    docs:
+      - SPEC.md
+      - ARCHITECTURE.md
+      - CHANGELOG.md
+      - DECISIONS.md
+      - OPERATIONS.md
+  deploy:
+    root:
+      - README.md
+      - .gitignore
+      - docker-compose.yml
+      - docker-compose.dev.yml
+    docs:
+      - SPEC.md
+      - ARCHITECTURE.md
+      - CHANGELOG.md
+      - DECISIONS.md
+      - OPERATIONS.md
+
+# Files that indicate the service is stateless (no database)
+stateless_indicators:
+  - absence_of: sqlalchemy
+    in_file: requirements.txt
+
+gitignore:
+  required_entries:
+    - ".env"
+    - "__pycache__/"
+    - "node_modules/"
+    - ".DS_Store"
+    - ".vscode/"
+    - ".idea/"
+    - "docker-compose.override.yml"
+
+docker_compose:
+  image_prefix: "ghcr.io/the-anonymous-aspirant/aspirant-"
+  dev:
+    postgres_host_port: "5433"
+    volume_name: "pgdata-dev"
+    db_host_override: "postgres"
+  memory_limited_services:
+    - transcriber
+    - translator
+    - remarkable
+  memory_limit: "2g"
+
+port_registry:
+  client:
+    host: 80
+    container: 80
+  postgres:
+    host: 5432
+    container: 5432
+  server:
+    host: 8081
+    container: 8080
+  transcriber:
+    host: 8082
+    container: 8000
+  commander:
+    host: 8083
+    container: 8000
+  translator:
+    host: 8084
+    container: 8000
+  monitor:
+    host: 8085
+    container: 8000
+  remarkable:
+    host: 8086
+    container: 8000
+  finance:
+    host: 8087
+    container: 8000
+
+volume_registry:
+  pgdata: "/var/lib/postgresql/data"
+  filedata: "/data/files"
+  audiodata: "/data/audio"
+  translatordata: "/data/models"
+  remarkabledata: "/data/remarkable"
+  kiwixdata: "/data"
+
+api_contract:
+  health_response_fields:
+    - status
+    - service
+    - version
+    - checks
+
+code_patterns:
+  python:
+    logging_format: "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
+    database_exports:
+      - engine
+      - SessionLocal
+      - Base
+      - get_db
+    model_timestamps:
+      - created_at
+      - updated_at
+
+documentation:
+  changelog_date_pattern: "^### \\d{4}-\\d{2}-\\d{2}"
+  spec_required_sections:
+    - "API Endpoints"
+    - "Data Model"
+    - "Constraints"
+    - "Acceptance Criteria"
+  operations_required_sections:
+    - "Setup"
+    - "How to Run"
+    - "How to Test"
+    - "How to Validate"
+    - "How to Debug"
+    - "Gotchas"
+
+testing:
+  forbidden_patterns:
+    - pattern: "sqlite"
+      message: "Use PostgreSQL, not SQLite"
+  conftest_required_fixtures:
+    - db
+    - client
