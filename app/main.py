@@ -51,7 +51,14 @@ def scan(path, fmt, category, verbose, rules_path, no_color):
             )
         sys.exit(0)
 
-    results = scan_repo(repo_path, rules, category_filter=category)
+    # Auto-discover deploy repo among siblings for cross-repo checks
+    deploy_path = None
+    parent = repo_path.parent
+    deploy_candidate = parent / "aspirant-deploy"
+    if deploy_candidate.is_dir() and deploy_candidate != repo_path:
+        deploy_path = deploy_candidate
+
+    results = scan_repo(repo_path, rules, category_filter=category, deploy_path=deploy_path)
 
     if fmt == "json":
         click.echo(report_json({repo_path.name: results}))
