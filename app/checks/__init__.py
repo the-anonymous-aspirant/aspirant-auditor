@@ -8,4 +8,5 @@ from app.checks import (
     git_hygiene,
     documentation,
     testing,
+    ci_workflow,
 )
