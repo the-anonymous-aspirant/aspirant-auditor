@@ -43,6 +43,14 @@ def scan(path, fmt, category, verbose, rules_path, no_color):
     rules = load_rules(rp)
     service_type = detect_service_type(repo_path)
 
+    if service_type == "unknown":
+        if fmt != "json":
+            from rich.console import Console
+            Console(no_color=no_color).print(
+                f"[dim]Skipping {repo_path.name} (no service markers found)[/dim]"
+            )
+        sys.exit(0)
+
     results = scan_repo(repo_path, rules, category_filter=category)
 
     if fmt == "json":
