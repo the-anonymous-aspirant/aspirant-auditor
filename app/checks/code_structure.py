@@ -5,7 +5,7 @@ import re
 from app.checks.base import CheckResult, RepoContext, Status, check
 
 
-@check(category="Code Structure", applies_to=["python"])
+@check(category="Code Structure", applies_to=["python", "python-cli"])
 def check_logging_format(ctx: RepoContext) -> list[CheckResult]:
     """Check that main.py uses the standard logging format."""
     results = []

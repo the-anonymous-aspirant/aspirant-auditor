@@ -3,10 +3,21 @@
 from pathlib import Path
 
 
+_PYTHON_WEB_FRAMEWORKS = (
+    "fastapi",
+    "flask",
+    "django",
+    "starlette",
+    "sanic",
+    "bottle",
+    "tornado",
+)
+
+
 def detect_service_type(repo_path: Path) -> str:
     """Detect the service type of a repository.
 
-    Returns one of: "deploy", "go", "vue", "python", "unknown"
+    Returns one of: "deploy", "go", "vue", "python", "python-cli", "unknown"
     """
     # Deploy repo: has docker-compose.yml at root
     if (repo_path / "docker-compose.yml").exists():
@@ -20,8 +31,14 @@ def detect_service_type(repo_path: Path) -> str:
     if (repo_path / "package.json").exists():
         return "vue"
 
-    # Python service: has requirements.txt
-    if (repo_path / "requirements.txt").exists():
+    # Python: has requirements.txt. Split into web-service ("python") and
+    # CLI-only ("python-cli") — CLI tools should not be held to the
+    # routes.py/schemas.py/test_health.py contract.
+    req_path = repo_path / "requirements.txt"
+    if req_path.exists():
+        req = req_path.read_text().lower()
+        if "click" in req and not any(fw in req for fw in _PYTHON_WEB_FRAMEWORKS):
+            return "python-cli"
         return "python"
 
     return "unknown"
