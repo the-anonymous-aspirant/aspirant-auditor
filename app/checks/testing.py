@@ -5,7 +5,7 @@ import re
 from app.checks.base import CheckResult, RepoContext, Status, check
 
 
-@check(category="Testing", applies_to=["python"])
+@check(category="Testing", applies_to=["python", "python-cli"])
 def check_no_sqlite(ctx: RepoContext) -> list[CheckResult]:
     """Check that no test file references SQLite."""
     results = []

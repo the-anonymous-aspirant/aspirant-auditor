@@ -1,5 +1,8 @@
 ## Changelog
 
+### 2026-07-11
+- Detect `python-cli` service type (Python + click, no web framework) and audit against a CLI-appropriate required-files template (no routes.py / schemas.py / test_health.py). Fixes self-audit CI red since 2026-03-13.
+
 ### 2026-03-13
 - Initial spec, architecture, decisions, and operations documents
 - Implemented CLI with Click (scan, scan-all, scan-deploy commands)

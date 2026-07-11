@@ -10,6 +10,22 @@ def test_detect_python(tmp_path):
     assert detect_service_type(repo) == "python"
 
 
+def test_detect_python_cli(tmp_path):
+    """A Python repo with click and no web framework is a CLI, not a service."""
+    repo = tmp_path / "aspirant-test"
+    repo.mkdir()
+    (repo / "requirements.txt").write_text("click==8.1.7\npyyaml==6.0.2\n")
+    assert detect_service_type(repo) == "python-cli"
+
+
+def test_detect_python_web_with_click(tmp_path):
+    """Click alongside a web framework still classifies as web python service."""
+    repo = tmp_path / "aspirant-test"
+    repo.mkdir()
+    (repo / "requirements.txt").write_text("fastapi\nclick\n")
+    assert detect_service_type(repo) == "python"
+
+
 def test_detect_go(tmp_path):
     repo = tmp_path / "aspirant-test"
     repo.mkdir()

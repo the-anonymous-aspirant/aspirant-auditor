@@ -25,6 +25,24 @@ required_files:
       - README.md
       - .gitignore
       - requirements.txt
+  python-cli:
+    app:
+      - __init__.py
+      - main.py
+      - config.py
+    tests:
+      - __init__.py
+      - conftest.py
+    docs:
+      - SPEC.md
+      - ARCHITECTURE.md
+      - CHANGELOG.md
+      - DECISIONS.md
+      - OPERATIONS.md
+    root:
+      - README.md
+      - .gitignore
+      - requirements.txt
   go:
     root:
       - README.md
