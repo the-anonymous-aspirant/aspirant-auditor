@@ -52,7 +52,7 @@ def _has_docker_image_in_deploy(ctx: RepoContext) -> bool:
     return image.startswith(prefix)
 
 
-@check(category="CI Workflow", applies_to=["python", "go", "vue"])
+@check(category="CI Workflow", applies_to=["python", "python-cli", "go", "vue"])
 def check_workflow_exists(ctx: RepoContext) -> list[CheckResult]:
     """Check that a CI workflow directory and at least one workflow file exist."""
     results = []
@@ -94,7 +94,7 @@ def check_workflow_exists(ctx: RepoContext) -> list[CheckResult]:
     return results
 
 
-@check(category="CI Workflow", applies_to=["python", "go", "vue"])
+@check(category="CI Workflow", applies_to=["python", "python-cli", "go", "vue"])
 def check_docker_build_push(ctx: RepoContext) -> list[CheckResult]:
     """Check that a workflow builds and pushes a Docker image if deploy references one."""
     results = []
@@ -153,7 +153,7 @@ def check_docker_build_push(ctx: RepoContext) -> list[CheckResult]:
     return results
 
 
-@check(category="CI Workflow", applies_to=["python", "go", "vue"])
+@check(category="CI Workflow", applies_to=["python", "python-cli", "go", "vue"])
 def check_recommended_steps(ctx: RepoContext) -> list[CheckResult]:
     """Check for recommended CI steps: metadata-action (proper tagging) and buildx (caching)."""
     results = []
@@ -196,7 +196,7 @@ def check_recommended_steps(ctx: RepoContext) -> list[CheckResult]:
     return results
 
 
-@check(category="CI Workflow", applies_to=["python", "go", "vue"])
+@check(category="CI Workflow", applies_to=["python", "python-cli", "go", "vue"])
 def check_main_push_trigger(ctx: RepoContext) -> list[CheckResult]:
     """Check that at least one workflow triggers on push to main."""
     results = []

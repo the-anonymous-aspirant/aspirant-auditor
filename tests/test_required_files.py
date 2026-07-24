@@ -74,6 +74,41 @@ def test_stateless_service_warns_for_db(tmp_path, rules):
         assert r.status == Status.WARN, f"Expected WARN for {r.message}, got {r.status}"
 
 
+def test_python_cli_skips_routes_and_health(tmp_path, rules):
+    """python-cli service type requires no routes.py, schemas.py, or test_health.py."""
+    repo = tmp_path / "aspirant-auditor"
+    repo.mkdir()
+    (repo / "README.md").write_text("# Auditor\n")
+    (repo / ".gitignore").write_text(".env\n")
+    (repo / "requirements.txt").write_text("click==8.1.7\npyyaml==6.0.2\n")
+
+    app = repo / "app"
+    app.mkdir()
+    (app / "__init__.py").write_text("")
+    (app / "main.py").write_text("import click\n")
+    (app / "config.py").write_text("")
+
+    tests = repo / "tests"
+    tests.mkdir()
+    (tests / "__init__.py").write_text("")
+    (tests / "conftest.py").write_text("")
+
+    docs = repo / "docs"
+    docs.mkdir()
+    for f in ["SPEC.md", "ARCHITECTURE.md", "CHANGELOG.md", "DECISIONS.md", "OPERATIONS.md"]:
+        (docs / f).write_text("")
+
+    ctx = RepoContext(
+        repo_path=repo,
+        repo_name="aspirant-auditor",
+        service_type="python-cli",
+        rules=rules,
+    )
+    results = check_required_files(ctx)
+    failed = [r for r in results if r.status == Status.FAIL]
+    assert failed == [], f"Unexpected failures for python-cli: {[r.message for r in failed]}"
+
+
 def test_dockerfile_check(tmp_repo, rules):
     ctx = RepoContext(
         repo_path=tmp_repo,
